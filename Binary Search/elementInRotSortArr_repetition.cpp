@@ -51,7 +51,9 @@ int main()
     int target;
     cin >> target;
 
-    cout << "Is the target element in the sorted rotated array: " << elementInSortedRotatedArr(input, target) << endl;
+    string result = elementInSortedRotatedArr(input, target) ? "true" : "false";
+
+    cout << "Is the target element in the sorted rotated array: " << result << endl;
 
     system("pause");
     return 0;
