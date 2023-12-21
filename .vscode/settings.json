@@ -3,6 +3,8 @@
     "*.embeddedhtml": "html",
     "*.js": "javascript",
     "iostream": "cpp",
-    "functional": "cpp"
+    "functional": "cpp",
+    "iosfwd": "cpp",
+    "ostream": "cpp"
   }
 }
