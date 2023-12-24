@@ -70,4 +70,5 @@ int main()
 }
 
 // Time Complexity: O(n^2)
+// Best case time complexity of Optimized Algo. -> O(n)
 // Space Complexity: O(1)

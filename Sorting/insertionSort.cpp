@@ -2,21 +2,23 @@
 #include <vector>
 using namespace std;
 
-void selectionSort(vector<int> &v)
+void insertionSort(vector<int> &v)
 {
-    for (int i = 0; i < v.size() - 1; i++)
+    int n = v.size();
+    for (int i = 1; i < n; i++)
     {
-        // assuming that the first index is the minimum element in the unsorted array and then finding the minimum element
-        int min_index = i;
-        for (int j = i + 1; j < v.size(); j++)
+        int current_el = v[i];
+
+        // finding the correct position for our current element
+        int j = i - 1;
+        while (j >= 0 && v[j] > current_el)
         {
-            if (v[min_index] > v[j])
-                min_index = j;
+            v[j + 1] = v[j];
+            j--;
         }
 
-        // placing the minimum element at the beginning
-        if (min_index != i)
-            swap(v[i], v[min_index]);
+        // inserting the current element at correct position
+        v[j + 1] = current_el;
     }
 }
 
@@ -34,7 +36,7 @@ int main()
     }
 
     cout << "Sorted array is: ";
-    selectionSort(v);
+    insertionSort(v);
     for (int i = 0; i < n; i++)
     {
         cout << v[i] << " ";
@@ -46,5 +48,5 @@ int main()
 }
 
 // Time Complexity -> O(n^2)
-// Best case time complexity of Algo. -> O(n^2)
+// Best case time complexity of Algo. -> O(n)
 // Space Complexity -> O(1)
