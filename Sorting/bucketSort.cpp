@@ -136,3 +136,9 @@ int main()
     system("pause");
     return 0;
 }
+
+// Time Complexity:
+// Worst Case -> O(n^2)
+// Average Case -> O(n+k) where k= maximum number of elements in a bucket
+
+// Space Complexity -> O(n+k)
