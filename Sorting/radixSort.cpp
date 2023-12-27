@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <cmath>
 using namespace std;
 
 void countSort(vector<int> &v, int digit, int n);
@@ -25,12 +24,12 @@ void radixSort(vector<int> &v)
 void countSort(vector<int> &v, int digit, int n)
 {
     // finding max digit
-    int max_digit = v[0] / digit;
+    int max_digit = (v[0] / digit) % 10;
     for (int i = 0; i < n; i++)
     {
-        if (max_digit < v[i] / digit)
+        if (max_digit < (v[i] / digit) % 10)
         {
-            max_digit = v[i] / digit;
+            max_digit = (v[i] / digit) % 10;
         }
     }
 
@@ -38,7 +37,7 @@ void countSort(vector<int> &v, int digit, int n)
     vector<int> cumulativeFreqArr(max_digit + 1, 0);
     for (int i = 0; i < n; i++)
     {
-        cumulativeFreqArr[v[i] / digit]++;
+        cumulativeFreqArr[(v[i] / digit) % 10]++;
     }
 
     // cumulative frequency array
@@ -51,7 +50,7 @@ void countSort(vector<int> &v, int digit, int n)
     vector<int> resultArr(n);
     for (int i = n - 1; i >= 0; i--)
     {
-        resultArr[--cumulativeFreqArr[v[i] / digit]] = v[i];
+        resultArr[--cumulativeFreqArr[(v[i] / digit) % 10]] = v[i];
     }
 
     // copying elements to main array
@@ -76,3 +75,7 @@ int main()
     system("pause");
     return 0;
 }
+
+// d is the number of digits in the max element of the array
+// Time Complexity -> O(d * (n+max)) ~ O(d*n)
+// Space Complexity -> O(n + max) [same as count sort] ~ O(n)
