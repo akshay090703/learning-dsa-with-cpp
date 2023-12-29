@@ -6,6 +6,7 @@
     "functional": "cpp",
     "iosfwd": "cpp",
     "ostream": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "new": "cpp"
   }
 }
