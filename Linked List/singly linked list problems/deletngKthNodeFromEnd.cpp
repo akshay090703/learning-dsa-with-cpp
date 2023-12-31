@@ -9,7 +9,7 @@ struct Node
     Node(int data)
     {
         this->data = data;
-        next = nullptr;
+        next = NULL;
     }
 };
 
@@ -25,7 +25,7 @@ struct LinkedList
     void insertAtHead(int data)
     {
         Node *newNode = new Node(data);
-        if (head == NULL)
+        if (head == nullptr)
         {
             head = newNode;
             return;
@@ -37,11 +37,12 @@ struct LinkedList
 
     void insertAtTail(int data)
     {
-        if (head == NULL)
+        if (head == nullptr)
         {
             insertAtHead(data);
             return;
         }
+
         Node *newNode = new Node(data);
         Node *temp = head;
         while (temp->next != nullptr)
@@ -61,45 +62,52 @@ struct LinkedList
             cout << temp->data << "->";
             temp = temp->next;
         }
-        cout << "NULL" << endl;
+        cout << "null" << endl;
     }
 };
 
-Node *reversingKNodes(Node *&head, int k)
+// assuming k is always less than length of linked list
+void removeKthNodeFromEnd(Node *&head, int k)
 {
-    Node *prevNode = nullptr;
-    Node *current = head;
-    int count = 0;
+    Node *ptr1 = head;
+    Node *ptr2 = head;
 
-    while (current != nullptr && count < k) // reversing first k nodes
+    // move ptr2 by k steps ahead
+    int count = k;
+    while (count--)
     {
-        Node *nextNode = current->next;
-        current->next = prevNode;
-        prevNode = current;
-        current = nextNode;
-        count++;
+        ptr2 = ptr2->next;
     }
 
-    // current will give us (k+1)th node
-    if (current != nullptr)
+    if (ptr2 == nullptr)
     {
-        Node *new_head = reversingKNodes(current, k); // recursive call to return new head
-        head->next = new_head;                        // connecting 2 linked lists
-    };
+        Node *temp = head;
+        head = head->next;
+        delete temp;
+        return;
+    }
 
-    // prevNode will give the new_head of connected linked lists
-    return prevNode;
+    while (ptr2->next != nullptr)
+    {
+        ptr1 = ptr1->next;
+        ptr2 = ptr2->next;
+    }
+
+    Node *temp = ptr1->next;
+    ptr1->next = ptr1->next->next;
+    delete temp;
 }
 
 int main()
 {
     LinkedList list = LinkedList();
-    for (int i = 1; i <= 6; i++)
+    for (int i = 1; i <= 5; i++)
     {
         list.insertAtTail(i);
     }
     list.printNodes();
-    list.head = reversingKNodes(list.head, 4);
+
+    removeKthNodeFromEnd(list.head, 5);
     list.printNodes();
 
     return 0;
