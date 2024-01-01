@@ -67,57 +67,105 @@ struct LinkedList
     }
 };
 
+// LinkedList mergingTwoSortedLLs(LinkedList list1, LinkedList list2)
+// {
+//     Node *temp1 = list1.head;
+//     Node *temp2 = list2.head;
+//     LinkedList result = LinkedList();
+
+//     Node *ansNode = nullptr;
+
+//     while (temp1 != nullptr && temp2 != nullptr)
+//     {
+//         Node *newNode;
+//         if (temp1->data < temp2->data)
+//         {
+//             newNode = new Node(temp1->data);
+//             temp1 = temp1->next;
+//         }
+//         else
+//         {
+//             newNode = new Node(temp2->data);
+//             temp2 = temp2->next;
+//         }
+
+//         if (ansNode == nullptr)
+//         {
+//             ansNode = newNode;
+//             result.head = ansNode;
+//         }
+//         else
+//         {
+//             ansNode->next = newNode;
+//             ansNode = newNode;
+//         }
+//     }
+
+//     while (temp1 != nullptr)
+//     {
+//         Node *newNode = new Node(temp1->data);
+//         ansNode->next = newNode;
+//         ansNode = newNode;
+//         temp1 = temp1->next;
+//     }
+
+//     while (temp2 != nullptr)
+//     {
+//         Node *newNode = new Node(temp2->data);
+//         ansNode->next = newNode;
+//         ansNode = newNode;
+//         temp2 = temp2->next;
+//     }
+
+//     return result;
+// }
+
 LinkedList mergingTwoSortedLLs(LinkedList list1, LinkedList list2)
 {
+    LinkedList ansLL = LinkedList();
+    Node *new_head = nullptr;
     Node *temp1 = list1.head;
     Node *temp2 = list2.head;
-    LinkedList result = LinkedList();
 
-    Node *ansNode = nullptr;
-
-    while (temp1 != nullptr && temp2 != nullptr)
+    if (temp1->data < temp2->data)
     {
-        Node *newNode;
+        new_head = temp1;
+        temp1 = temp1->next;
+    }
+    else
+    {
+        new_head = temp2;
+        temp2 = temp2->next;
+    }
+
+    Node *ansNode = new_head;
+    ansLL.head = ansNode;
+
+    while (temp1 && temp2)
+    {
         if (temp1->data < temp2->data)
         {
-            newNode = new Node(temp1->data);
+            ansNode->next = temp1;
             temp1 = temp1->next;
         }
         else
         {
-            newNode = new Node(temp2->data);
+            ansNode->next = temp2;
             temp2 = temp2->next;
         }
-
-        if (ansNode == nullptr)
-        {
-            ansNode = newNode;
-            result.head = ansNode;
-        }
-        else
-        {
-            ansNode->next = newNode;
-            ansNode = newNode;
-        }
+        ansNode = ansNode->next;
     }
 
-    while (temp1 != nullptr)
+    if (temp1)
     {
-        Node *newNode = new Node(temp1->data);
-        ansNode->next = newNode;
-        ansNode = newNode;
-        temp1 = temp1->next;
+        ansNode->next = temp1;
     }
-
-    while (temp2 != nullptr)
+    else
     {
-        Node *newNode = new Node(temp2->data);
-        ansNode->next = newNode;
-        ansNode = newNode;
-        temp2 = temp2->next;
+        ansNode->next = temp2;
     }
 
-    return result;
+    return ansLL;
 }
 
 int main()
@@ -125,7 +173,7 @@ int main()
     LinkedList list1 = LinkedList();
     LinkedList list2 = LinkedList();
 
-    for (int i = 0; i <= 10; i += 2)
+    for (int i = 0; i <= 20; i += 2)
     {
         list1.insertAtTail(i);
     }
@@ -142,3 +190,7 @@ int main()
 
     return 0;
 }
+
+// for second approach
+// Time Complexity -> O(n+m)
+// Space Complexity -> O(1)
