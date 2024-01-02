@@ -30,7 +30,6 @@ struct LinkedList
             head = newNode;
             return;
         }
-
         newNode->next = head;
         head = newNode;
     }
@@ -45,6 +44,7 @@ struct LinkedList
 
         Node *newNode = new Node(data);
         Node *temp = head;
+
         while (temp->next)
         {
             temp = temp->next;
@@ -66,11 +66,16 @@ struct LinkedList
     }
 };
 
-bool isPalindromeLL(LinkedList list)
+// Time Complexity -> O(2n) ~ O(n)
+// Space Complexity -> O(1)
+void reorderLL(LinkedList list)
 {
+    if (!list.head || !list.head->next || !list.head->next->next)
+        return;
+
     Node *slow = list.head, *fast = list.head;
 
-    // 1. finding the middle element
+    // Finding the middle of Linked List
     while (fast && fast->next)
     {
         slow = slow->next;
@@ -78,11 +83,10 @@ bool isPalindromeLL(LinkedList list)
     }
     Node *mid = slow;
 
+    // Reversing the list after the middle element
     Node *prev = nullptr;
     Node *curr = mid;
     Node *next = nullptr;
-
-    // 2 and 3. reversing and breaking linked list in 2 lls
     while (curr)
     {
         next = curr->next;
@@ -91,37 +95,34 @@ bool isPalindromeLL(LinkedList list)
         curr = next;
     }
 
-    // 4. comparing the 2 linked lists now, if equal then return true, otherwise false
+    // Merging the two lists and getting the answer
     Node *head1 = list.head;
     Node *head2 = prev;
-    while (head1 && head2)
+    while (head2->next) // or we can do this until head1!=head2
     {
-        if (head1->data != head2->data)
-            return false;
+        Node *temp1 = head1->next;
+        Node *temp2 = head2->next;
 
-        head1 = head1->next;
-        head2 = head2->next;
+        head1->next = head2;
+        head2->next = temp1;
+
+        head1 = temp1;
+        head2 = temp2;
     }
-
-    return true;
 }
 
 int main()
 {
     LinkedList list;
-    list.insertAtTail(1);
-    list.insertAtTail(2);
-    list.insertAtTail(3);
-    // list.insertAtTail(3);
-    list.insertAtTail(3);
-    list.insertAtTail(2);
-    list.insertAtTail(1);
-    // list.insertAtTail(1);
-
+    for (int i = 1; i <= 2; i++)
+    {
+        list.insertAtTail(i);
+    }
     list.printNodes();
 
-    string answer = isPalindromeLL(list) ? "Palindrome." : "Not Palindrome.";
-    cout << answer << endl;
+    reorderLL(list);
+    cout << "Reordered linked list: \n";
+    list.printNodes();
 
     return 0;
 }

@@ -30,7 +30,6 @@ struct LinkedList
             head = newNode;
             return;
         }
-
         newNode->next = head;
         head = newNode;
     }
@@ -42,9 +41,9 @@ struct LinkedList
             insertAtHead(data);
             return;
         }
-
         Node *newNode = new Node(data);
         Node *temp = head;
+
         while (temp->next)
         {
             temp = temp->next;
@@ -66,62 +65,43 @@ struct LinkedList
     }
 };
 
-bool isPalindromeLL(LinkedList list)
+// Time Complexity -> O(n)
+// Space Complexity -> O(1)
+void groupOddAndEvenIndices(LinkedList &list)
 {
-    Node *slow = list.head, *fast = list.head;
-
-    // 1. finding the middle element
-    while (fast && fast->next)
+    if (!list.head || !list.head->next)
     {
-        slow = slow->next;
-        fast = fast->next->next;
-    }
-    Node *mid = slow;
-
-    Node *prev = nullptr;
-    Node *curr = mid;
-    Node *next = nullptr;
-
-    // 2 and 3. reversing and breaking linked list in 2 lls
-    while (curr)
-    {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
+        return;
     }
 
-    // 4. comparing the 2 linked lists now, if equal then return true, otherwise false
-    Node *head1 = list.head;
-    Node *head2 = prev;
-    while (head1 && head2)
-    {
-        if (head1->data != head2->data)
-            return false;
+    Node *odd = list.head;
+    Node *even = list.head->next;
+    Node *evenHead = even;
 
-        head1 = head1->next;
-        head2 = head2->next;
+    while (even && even->next)
+    {
+        odd->next = odd->next->next;
+        even->next = even->next->next;
+        odd = odd->next;
+        even = even->next;
     }
 
-    return true;
+    odd->next = evenHead;
 }
 
 int main()
 {
     LinkedList list;
-    list.insertAtTail(1);
-    list.insertAtTail(2);
-    list.insertAtTail(3);
-    // list.insertAtTail(3);
-    list.insertAtTail(3);
-    list.insertAtTail(2);
-    list.insertAtTail(1);
-    // list.insertAtTail(1);
-
+    for (int i = 1; i <= 7; i++)
+    {
+        list.insertAtTail(i);
+    }
+    cout << "Before grouping: \n";
     list.printNodes();
 
-    string answer = isPalindromeLL(list) ? "Palindrome." : "Not Palindrome.";
-    cout << answer << endl;
+    cout << "After grouping odd and even indices: \n";
+    groupOddAndEvenIndices(list);
+    list.printNodes();
 
     return 0;
 }
