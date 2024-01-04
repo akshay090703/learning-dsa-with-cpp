@@ -63,6 +63,8 @@ struct DoublyLinkedList
     }
 };
 
+// Time Complexity -> O(n)
+// Space Complexity -> O(1)
 vector<int> maxMinCriticalPointsInLL(DoublyLinkedList &list)
 {
     if (!list.head || !list.head->next || !list.head->next->next)
@@ -70,8 +72,13 @@ vector<int> maxMinCriticalPointsInLL(DoublyLinkedList &list)
         return {-1, -1};
     }
 
-    vector<Node *> critical_points;
     Node *currNode = list.tail->prev;
+    int minDist = INT_MAX;
+    int maxDist = INT_MIN;
+    int pos = 0;
+    int latest_dist = 0;
+    int last_point = -1;
+    int critical_points = 0;
 
     while (currNode != list.head)
     {
@@ -80,34 +87,26 @@ vector<int> maxMinCriticalPointsInLL(DoublyLinkedList &list)
 
         if ((prevNode->data < currNode->data && currNode->data > nextNode->data) || (prevNode->data > currNode->data && currNode->data < nextNode->data))
         {
-            critical_points.insert(critical_points.begin(), currNode);
+            if (last_point == -1)
+            {
+                last_point = pos;
+            }
+            else
+            {
+                minDist = min(minDist, pos - latest_dist);
+            }
+            latest_dist = pos;
+            maxDist = max(maxDist, pos - last_point);
+            critical_points++;
         }
+        pos++;
 
         currNode = prevNode;
     }
 
-    if (critical_points.size() < 2)
+    if (critical_points < 2)
     {
         return {-1, -1};
-    }
-
-    Node *firstCriticalPoint = critical_points[0];
-    Node *lastCriticalPoint = critical_points[critical_points.size() - 1];
-
-    int maxDist = 0;
-    Node *temp = lastCriticalPoint;
-    while (temp != firstCriticalPoint)
-    {
-        temp = temp->prev;
-        maxDist++;
-    }
-
-    int minDist = 0;
-    temp = lastCriticalPoint;
-    while (temp != critical_points[critical_points.size() - 2])
-    {
-        temp = temp->prev;
-        minDist++;
     }
 
     return {minDist, maxDist};
@@ -117,9 +116,10 @@ int main()
 {
     DoublyLinkedList dll;
     dll.insertAtTail(1);
-    dll.insertAtTail(5);
-    dll.insertAtTail(2);
-    dll.insertAtTail(6);
+    dll.insertAtTail(5); // cp
+    dll.insertAtTail(4);
+    dll.insertAtTail(2); // cp
+    dll.insertAtTail(6); // cp
     dll.insertAtTail(3);
     dll.printNodes();
 
