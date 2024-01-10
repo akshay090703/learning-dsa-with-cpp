@@ -4,6 +4,7 @@ using namespace std;
 // All operations take O(1) time and space complexity
 // we could have used vectors here but instead we made the queue from scratch
 // using traditional dynamic memory using array
+// with vectors, we would've written less lines of code
 class Queue
 {
     int *arr;
@@ -65,7 +66,7 @@ public:
     {
         if (front == -1)
         {
-            cout << "Queue is empty." << endl;
+            // cout << "Queue is empty." << endl;
             return -1;
         }
         return arr[front];
@@ -108,6 +109,7 @@ int main()
     }
     cout << endl;
 
+    q.enqueue(3);
     cout << "Front: " << q.getFront() << endl;
     cout << "Size: " << q.getSize() << endl;
 
