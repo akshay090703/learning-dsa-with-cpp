@@ -60,7 +60,7 @@ void levelOrderTraversal(Node *root)
             cout << endl;
             if (!q.empty())
             {
-                q.push(nullptr);
+                q.push(nullptr); // means that there are still nodes remaining from the old level
             }
         }
         else
