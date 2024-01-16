@@ -128,8 +128,8 @@ void solve(Node *root, int diagonal, map<int, vector<int>> &m)
 
     m[diagonal].push_back(root->data);
 
-    solve(root->right, diagonal, m);
     solve(root->left, diagonal + 1, m);
+    solve(root->right, diagonal, m);
 }
 
 vector<int> diagonal(Node *root)
@@ -159,8 +159,8 @@ int main()
     preOrderTraversal(tree.root);
 
     cout << "\nDiagonal Traversal of the Binary Tree: ";
-    vector<int> res = diagonalView(tree.root);
-    // vector<int> res = diagonal(tree.root);
+    // vector<int> res = diagonalView(tree.root);
+    vector<int> res = diagonal(tree.root);
     for (int i = 0; i < res.size(); i++)
     {
         cout << res[i] << " ";
