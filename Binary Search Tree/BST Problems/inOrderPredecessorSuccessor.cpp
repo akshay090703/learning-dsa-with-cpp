@@ -121,7 +121,8 @@ Node *searchInBST(Node *root, int key)
     return nullptr;
 }
 
-// It is the node with the largest value that is smaller than the keyNode value
+// It is the node with the largest value that is smaller than the
+// keyNode value -> left subtree largest value
 // Time Complexity -> O(height) ~ O(n)
 // Space Complexity -> O(1)
 Node *inOrderPredecessor(Node *root, int key)
@@ -130,6 +131,7 @@ Node *inOrderPredecessor(Node *root, int key)
     if (!keyNode)
         return nullptr;
 
+    // if node has a left subtree
     if (keyNode->left)
     {
         Node *temp = keyNode;
@@ -141,6 +143,7 @@ Node *inOrderPredecessor(Node *root, int key)
         return temp;
     }
 
+    // if node does not have a left subtree
     Node *predecessor = nullptr;
     while (root)
     {
@@ -163,12 +166,16 @@ Node *inOrderPredecessor(Node *root, int key)
 }
 
 // It is the smallest node value that is larger than the keyNode value
+// -> smallest node in right subtree
 // Time Complexity -> O(height) ~ O(n)
 // Space Complexity -> O(1)
 Node *inOrderSuccessor(Node *root, int key)
 {
     Node *keyNode = searchInBST(root, key);
+    if (!keyNode)
+        return nullptr;
 
+    // if node has a right subtree
     if (keyNode->right)
     {
         Node *temp = keyNode;
@@ -180,12 +187,13 @@ Node *inOrderSuccessor(Node *root, int key)
         return temp;
     }
 
-    Node *predecessor = nullptr;
+    // if node does not have a right subtree
+    Node *successor = nullptr;
     while (root)
     {
         if (root->data > key)
         {
-            predecessor = root;
+            successor = root;
             root = root->left;
         }
         else if (root->data < key)
@@ -198,7 +206,17 @@ Node *inOrderSuccessor(Node *root, int key)
         }
     }
 
-    return predecessor;
+    return successor;
+}
+
+pair<int, int> predecessorSuccessor(Node *root, int key)
+{
+    Node *predecessor = inOrderPredecessor(root, key);
+    Node *successor = inOrderSuccessor(root, key);
+    int preValue = (predecessor) ? predecessor->data : -1;
+    int sucValue = (successor) ? successor->data : -1;
+    pair<int, int> result = {preValue, sucValue};
+    return result;
 }
 
 int main()
@@ -219,9 +237,9 @@ int main()
     cout << "\nEnter the element to find the inOrder Predecessor and Successor: ";
     cin >> element;
 
-    cout << "The inOrder Predecessor is: " << inOrderPredecessor(tree.root, element)->data << endl;
-
-    cout << "The inOrder Successor is: " << inOrderSuccessor(tree.root, element)->data << endl;
+    pair<int, int> ans = predecessorSuccessor(tree.root, element);
+    cout << "The inOrder Predecessor and Successor are: ";
+    cout << ans.first << " " << ans.second << endl;
 
     return 0;
 }
