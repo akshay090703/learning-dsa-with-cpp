@@ -10,6 +10,7 @@
     "new": "cpp",
     "array": "cpp",
     "string_view": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "string": "cpp"
   }
 }
