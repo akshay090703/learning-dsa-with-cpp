@@ -11,6 +11,8 @@
     "array": "cpp",
     "string_view": "cpp",
     "queue": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "deque": "cpp",
+    "vector": "cpp"
   }
 }
