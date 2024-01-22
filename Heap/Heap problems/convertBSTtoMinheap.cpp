@@ -113,7 +113,6 @@ void vectorToMinheap(Node *&root, vector<int> &inOrder, int &index)
     if (!root)
         return;
 
-    cout << index << endl;
     root->data = inOrder[index++];
     vectorToMinheap(root->left, inOrder, index);
     vectorToMinheap(root->right, inOrder, index);
