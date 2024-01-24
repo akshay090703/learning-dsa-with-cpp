@@ -15,6 +15,7 @@
     "deque": "cpp",
     "vector": "cpp",
     "algorithm": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "unordered_map": "cpp"
   }
 }
