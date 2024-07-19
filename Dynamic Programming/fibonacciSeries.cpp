@@ -1,84 +1,69 @@
-#include <iostream>
+// Online C++ compiler to run C++ program online
 #include <bits/stdc++.h>
 using namespace std;
 
-// Using Top-Down Approach
+// using recursion
+// int fibo(int n) {
+//     if(n == 0 or n == 1) return n;
+
+//     return fibo(n - 1) + fibo(n - 2);
+// }
+
+// using memoization
+// Time Complexity-> O(n)
+// Space Complexity -> O(N) + O(N)
+// int fibo(int n, vector<int> &dp) {
+//     if(n == 0 or n == 1) {
+//         dp[n] = n;
+//         return dp[n];
+//     }
+
+//     if(dp[n] != -1) {
+//         return dp[n];
+//     }
+
+//     dp[n] = fibo(n - 1, dp) + fibo(n - 2, dp);
+//     return dp[n];
+// }
+
+// Using Tabulation
 // Time Complexity -> O(n)
 // Space Complexity -> O(n)
-int fibonacci(int num, vector<int> &dp)
-{
-    if (num == 1 or num == 0)
-    {
-        return num;
-    }
-
-    // Step 3
-    // overlapping subproblem
-    if (dp[num] != -1)
-    {
-        return dp[num];
-    }
-
-    // Step 2
-    dp[num] = fibonacci(num - 1, dp) + fibonacci(num - 2, dp);
-    return dp[num];
-}
-
-// Using Bottom-Up Approach
-// Time Complexity -> O(n)
-// Space Complexity -> O(n) (Better than Top-Down Approach in this case as no recursive calls)
-// int fibonacciBottom(int n)
-// {
-//     // Step 1
-//     vector<int> dp(n + 1);
-
-//     // Step 2
-//     dp[0] = 0;
-//     dp[1] = 1;
-
-//     // Step 3
-//     for (int i = 2; i <= n; i++)
-//     {
+// int fibo(int n, vector<int> &dp) {
+//     for(int i = 2; i<=n; i++) {
 //         dp[i] = dp[i - 1] + dp[i - 2];
 //     }
 
 //     return dp[n];
 // }
 
-// After Space Complexity
+// Using Space Optimization
 // Time Complexity -> O(n)
 // Space Complexity -> O(1)
-int fibonacciBottom(int n)
+int fibo(int n)
 {
-    int prev1 = 0;
-    int prev2 = 1;
-
-    if (n == 0)
-        return prev1;
+    int prevPrev = 0;
+    int prev = 1;
 
     for (int i = 2; i <= n; i++)
     {
-        int curr = prev1 + prev2;
+        int next = prev + prevPrev;
 
-        prev1 = prev2;
-        prev2 = curr;
+        prevPrev = prev;
+        prev = next;
     }
 
-    return prev2;
+    return prev;
 }
 
 int main()
 {
-    int n;
-    cin >> n;
+    vector<int> dp(5 + 1, -1);
+    dp[0] = 0;
+    dp[1] = 1;
+    // cout << fibo(5, dp);
 
-    // Step 1
-    // For Memoization
-    vector<int> dp(n + 1, -1);
-
-    cout << fibonacci(n, dp) << endl;
-
-    cout << fibonacciBottom(n) << endl;
+    cout << fibo(5);
 
     return 0;
 }
