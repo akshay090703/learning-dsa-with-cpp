@@ -1,80 +1,129 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+//{ Driver Code Starts
+#include <bits/stdc++.h>
 using namespace std;
 
-bool cmp(vector<int> &a, vector<int> &b)
+// } Driver Code Ends
+class Solution
 {
-    return a[2] < b[2];
-}
-
-void makeSet(vector<int> &parent, vector<int> &rank, int n)
-{
-    for (int i = 0; i < n; i++)
+public:
+    // Function to find sum of weights of edges of the Minimum Spanning Tree.
+    class DisjointSet
     {
-        parent[i] = i;
-        rank[i] = 0;
-    }
-}
+        vector<int> rank, parent;
 
-int findParent(vector<int> &parent, int node)
-{
-    if (parent[node] == node)
-    {
-        return node;
-    }
-
-    return parent[node] = findParent(parent, parent[node]); // for path compression
-}
-
-void unionSet(int u, int v, vector<int> &parent, vector<int> &rank)
-{
-    u = findParent(parent, u);
-    v = findParent(parent, v);
-
-    if (rank[u] < rank[v])
-    {
-        parent[u] = v;
-    }
-    else if (rank[u] > rank[v])
-    {
-        parent[v] = u;
-    }
-    else
-    {
-        parent[v] = u;
-        rank[u]++;
-    }
-}
-
-int minimumSpanningTree(vector<vector<int>> &edges, int n)
-{
-    sort(edges.begin(), edges.end(), cmp);
-
-    vector<int> parent(n);
-    vector<int> rank(n);
-
-    makeSet(parent, rank, n);
-    int minWeight = 0;
-
-    for (int i = 0; i < edges.size(); i++)
-    {
-        int u = findParent(parent, edges[i][0]);
-        int v = findParent(parent, edges[i][1]);
-        int wt = edges[i][2];
-
-        if (u != v)
+    public:
+        DisjointSet(int n)
         {
-            minWeight += wt;
-            unionSet(u, v, parent, rank);
-        }
-    }
+            rank.resize(n + 1, 0);
+            parent.resize(n + 1);
 
-    return minWeight;
-}
+            for (int i = 0; i <= n; i++)
+            {
+                parent[i] = i;
+            }
+        }
+
+        int findUlParent(int u)
+        {
+            if (parent[u] == u)
+                return u;
+
+            return parent[u] = findUlParent(parent[u]);
+        }
+
+        void unionByRank(int u, int v)
+        {
+            int ulParentU = findUlParent(u);
+            int ulParentV = findUlParent(v);
+
+            int rankParentU = rank[ulParentU];
+            int rankParentV = rank[ulParentV];
+
+            if (ulParentU == ulParentV)
+                return;
+
+            if (rankParentU == rankParentV)
+            {
+                parent[ulParentV] = ulParentU;
+                rank[ulParentU] = rank[ulParentV] + 1;
+            }
+            else if (rankParentU > rankParentV)
+            {
+                parent[ulParentV] = ulParentU;
+            }
+            else
+            {
+                parent[ulParentU] = ulParentV;
+            }
+        }
+    };
+
+    // Using Kruskal's Algorithm
+    int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        vector<vector<int>> edges;
+        for (int i = 0; i < V; i++)
+        {
+            int u = i;
+            for (int j = 0; j < adj[i].size(); j++)
+            {
+                int v = adj[i][j][0];
+                int wt = adj[i][j][1];
+
+                edges.push_back({wt, u, v});
+                // would not make any difference as disjoint set will automatically discard it
+                // edges.push_back({wt, v, u});
+            }
+        }
+
+        DisjointSet ds(V);
+        sort(edges.begin(), edges.end(), [](const auto &a, const auto &b)
+             { return a[0] < b[0]; });
+
+        int mstSum = 0;
+        for (auto edge : edges)
+        {
+            if (ds.findUlParent(edge[1]) != ds.findUlParent(edge[2]))
+            {
+                ds.unionByRank(edge[1], edge[2]);
+                mstSum += edge[0];
+            }
+        }
+
+        return mstSum;
+    }
+};
+
+//{ Driver Code Starts.
 
 int main()
 {
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int V, E;
+        cin >> V >> E;
+        vector<vector<int>> adj[V];
+        int i = 0;
+        while (i++ < E)
+        {
+            int u, v, w;
+            cin >> u >> v >> w;
+            vector<int> t1, t2;
+            t1.push_back(v);
+            t1.push_back(w);
+            adj[u].push_back(t1);
+            t2.push_back(u);
+            t2.push_back(w);
+            adj[v].push_back(t2);
+        }
+
+        Solution obj;
+        cout << obj.spanningTree(V, adj) << "\n";
+    }
 
     return 0;
 }
+
+// } Driver Code Ends
