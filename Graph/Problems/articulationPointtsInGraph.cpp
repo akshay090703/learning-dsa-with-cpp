@@ -1,97 +1,113 @@
-#include <iostream>
-#include <unordered_map>
-#include <list>
-#include <vector>
+//{ Driver Code Starts
+// Initial Template for C++
+
+#include <bits/stdc++.h>
 using namespace std;
 
-void dfs(int node, int parent, unordered_map<int, list<int>> &adj, unordered_map<int, bool> &visited, vector<int> &disc, vector<int> &low, vector<bool> &artiPoints, int &timer)
+// } Driver Code Ends
+// User function Template for C++
+
+class Solution
 {
-    visited[node] = true;
-    disc[node] = low[node] = timer++;
-    int child = 0;
-
-    for (auto neighbour : adj[node])
-    {
-        if (neighbour == parent)
-            continue;
-
-        if (!visited[neighbour])
-        {
-            dfs(neighbour, node, adj, visited, disc, low, artiPoints, timer);
-            low[node] = min(low[node], low[neighbour]);
-
-            // check if articulation point or not
-            if (low[neighbour] >= disc[node] && parent != -1)
-            {
-                artiPoints[node] = true;
-            }
-            child++;
-        }
-        else
-        {
-            low[node] = min(low[node], disc[neighbour]);
-        }
-
-        // for 1st node
-        if (parent == -1 and child > 1)
-        {
-            artiPoints[node] = true;
-        }
-    }
-}
-
-// Time Complexity and Space Complexity will be same as dfs
-// Time : O(V+E)
-// Space : O(V)
-vector<bool> articulationPoints(vector<vector<int>> &edges, int v, int e)
-{
-    // adjacency list
-    unordered_map<int, list<int>> adj;
-    for (int i = 0; i < edges.size(); i++)
-    {
-        int u = edges[i][0];
-        int v = edges[i][1];
-
-        adj[u].push_back(v);
-        adj[v].push_back(u);
-    }
-
+private:
     int timer = 0;
-    vector<int> disc(v); // discovery time
-    vector<int> low(v);  // lowest time
-    unordered_map<int, bool> visited;
-    vector<bool> artiPoints(v, false);
-
-    for (int i = 0; i < v; i++)
+    void dfs(vector<int> adj[], vector<bool> &isVisited, vector<int> &discTime,
+             vector<int> &lowestTime, vector<bool> &mark, int node, int parent)
     {
-        disc[i] = -1;
-        low[i] = -1;
-    }
 
-    // dfs
-    for (int i = 0; i < v; i++)
-    {
-        if (!visited[i])
+        isVisited[node] = true;
+        discTime[node] = lowestTime[node] = timer;
+        timer++;
+
+        int children = 0;
+        for (auto neighbour : adj[node])
         {
-            dfs(i, -1, adj, visited, disc, low, artiPoints, timer);
+            if (parent == neighbour)
+                continue;
+
+            if (!isVisited[neighbour])
+            {
+                dfs(adj, isVisited, discTime, lowestTime, mark, neighbour, node);
+                lowestTime[node] = min(lowestTime[node], lowestTime[neighbour]);
+                children++;
+
+                if (lowestTime[neighbour] >= discTime[node] and parent != -1)
+                {
+                    mark[node] = true;
+                }
+            }
+            else
+            {
+                lowestTime[node] = min(lowestTime[node], discTime[neighbour]);
+            }
         }
+
+        if (children > 1 and parent == -1)
+            mark[node] = true;
     }
 
-    cout << "Articulation Points are as follows: " << endl;
-    for (int i = 0; i < v; i++)
+public:
+    vector<int> articulationPoints(int V, vector<int> adj[])
     {
-        if (artiPoints[i])
-        {
-            cout << i << " ";
-        }
-    }
-    cout << endl;
+        vector<bool> isVisited(V, false);
 
-    return artiPoints;
-}
+        // discovery time of the node
+        vector<int> discTime(V);
+
+        // lowest possible time to reach node
+        vector<int> lowestTime(V);
+
+        // will mark the articulation points
+        vector<bool> mark(V, false);
+
+        for (int i = 0; i < V; i++)
+        {
+            if (!isVisited[i])
+            {
+                dfs(adj, isVisited, discTime, lowestTime, mark, i, -1);
+            }
+        }
+
+        vector<int> result;
+        for (int i = 0; i < V; i++)
+        {
+            if (mark[i])
+            {
+                result.push_back(i);
+            }
+        }
+
+        if (result.empty())
+            return {-1};
+
+        return result;
+    }
+};
+
+//{ Driver Code Starts.
 
 int main()
 {
-
+    int tc;
+    cin >> tc;
+    while (tc--)
+    {
+        int V, E;
+        cin >> V >> E;
+        vector<int> adj[V];
+        for (int i = 0; i < E; i++)
+        {
+            int u, v;
+            cin >> u >> v;
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        Solution obj;
+        vector<int> ans = obj.articulationPoints(V, adj);
+        for (auto i : ans)
+            cout << i << " ";
+        cout << "\n";
+    }
     return 0;
 }
+// } Driver Code Ends
